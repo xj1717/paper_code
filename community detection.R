@@ -48,7 +48,7 @@ error_min=function(Est_label,True_label,N)
 main=function(X,W,p,N,True_label,num_block,Iteration=FALSE)
 {
   ##################
-  # ʹ������ල��ά���Խڵ㣩��Ȼ����ʩ��k-means
+  # 使用网络监督降维（对节点），然后再施行k-means
       S=1-W # adjacency matrix W
       G=G_mat(X,S,N,p)
       A=cov(X)
@@ -94,7 +94,7 @@ main=function(X,W,p,N,True_label,num_block,Iteration=FALSE)
         {SumSquare_old=SumSquare
         X_proj_old=X_proj
         error_old=error
-        
+        #求A的特征向量和A的一0.5次方
         A_eig=eigen(A)
         A_sqrt=A_eig$vectors%*%diag(1/sqrt(A_eig$values))%*%t(A_eig$vectors)
         
@@ -110,17 +110,17 @@ main=function(X,W,p,N,True_label,num_block,Iteration=FALSE)
           }
           r=which.max(rank_r) 
         }
-        
+        # 这里求Ga的前r 个正交特证向量
         Id_eigv=c(1:r)
         V_lda=A_sqrt%*%(eigen(A_sqrt%*%G%*%A_sqrt)$vectors[,Id_eigv])
         
         ####
-        
+        #这里把节点x向量做投影
         X_proj=X%*%V_lda
-        
+        #这里用k-means做聚类num-block是2
         kc=kmeans(X_proj,num_block)
         SumSquare=kc$tot.withinss/kc$totss
-        
+        #这里查看聚类错识个数，注意聚类不是分类，类标的意义不大
         error=error_min(kc$cluster,True_label,N)
         
         if (SumSquare_old<SumSquare) # if the results get worse than the previous round, we use the previous one. 
