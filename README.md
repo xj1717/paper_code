@@ -1,4 +1,4 @@
-### Hi there 👋
+### 对Dimension reduction for covariates in network data文章代码写了注释。
 
 <!--
 **xj1717/xj1717** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
