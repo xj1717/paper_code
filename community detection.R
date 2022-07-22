@@ -1,5 +1,6 @@
 
 #the matrix of  hat{G} in the main text.
+# 这里生成hat{G}矩阵。
 G_mat=function(X,S,N,p)  
 {
   n=0
@@ -20,20 +21,25 @@ G_mat=function(X,S,N,p)
 }
 
 # compute the clasification error for the NDR based K-means algorithm.  
+# 这里计算k-means聚类算法的错误率，由于聚类算法对类标不敏感，所以应当取聚类类标与真实类标最接近（错误率最小）这种情况的错误率。
 error_min=function(Est_label,True_label,N) 
 { 
   #library(e1071)
+  # unique是这里的类标取值集合
   Unique=unique(Est_label)
+  # error的长度是类标集合元素个数的阶乘，因为聚类对类标不敏感，类标只是个名字而已
   error=rep(0,factorial(length(Unique))) 
+  # V是0-1矩阵，每一行对应一个节点，每个元素表示节点是否属于这一类。
   V=matrix(0,length(Est_label),length(Unique))
   for (i in 1:length(Est_label))
-  {Id_i=which(Unique==Est_label[i])
-  V[i,Id_i]=1
+  {Id_i=which(Unique==Est_label[i])#这里应该是看节点的真实类标是多少，记为ID_i
+  V[i,Id_i]=1#将ID_i字段赋值为1
   }
+  # 这里是做类标集合的全排列
   value_perm=t(permutations(length(Unique)))
-  
+  # 这里做了矩阵乘法，使得每一列都表示一种可能的类标分配方式。
   Label_perm=V%*%value_perm
-  
+  # 由于聚类算法对类标不敏感，所以应当取聚类类标与真实类标最接近（错误率最小）这种情况的错误率。
   for (i in 1:factorial(length(Unique)))
   {
     error[i]=length(which(True_label!=Label_perm[,i]))/(num_block*N)
