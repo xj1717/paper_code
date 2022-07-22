@@ -8,9 +8,9 @@
 
 Sigma_Adj=function(p,N,struc,a1,a2,b,c,s) # generate covariance matrix and adjcent matrix. 
 {
-  # ÕâÀïÍÆ²âÊÇÉú³ÉA¡£
-  # AµÄÈ¡ÖµÓĞÁ½ÖÖÑ¡Ôñ£¬Ò»ÖÖÊÇcov(X)£¬Ò»ÖÖÊÇ$\sigma_\epsilon$£¬¸ù¾İÎÄÕÂÑ¡È¡µÚ¶şÖÖ¡£
-  # ÏÈÇóB£¬ÊÇ$\sigma_\epsilon$
+  # è¿™é‡Œæ¨æµ‹æ˜¯ç”ŸæˆAã€‚
+  # Açš„å–å€¼æœ‰ä¸¤ç§é€‰æ‹©ï¼Œä¸€ç§æ˜¯cov(X)ï¼Œä¸€ç§æ˜¯$\sigma_\epsilon$ï¼Œæ ¹æ®æ–‡ç« é€‰å–ç¬¬äºŒç§ã€‚
+  # å…ˆæ±‚Bï¼Œæ˜¯$\sigma_\epsilon$
   B=matrix(0,p,p)
   for(i in 1:p)
   {
@@ -18,31 +18,31 @@ Sigma_Adj=function(p,N,struc,a1,a2,b,c,s) # generate covariance matrix and adjce
     {
       if (abs(i-j)<p)
       {
-        #ÕâÀïBÊÇÎó²îÏîµÄĞ­·½²î¾ØÕó
+        #è¿™é‡ŒBæ˜¯è¯¯å·®é¡¹çš„åæ–¹å·®çŸ©é˜µ
         B[i,j]=0.7^(abs(i-j)/3)
         B[j,i]=B[i,j]
       }
     }
   }
   set.seed(s)
-  # ÕâÀïPijÊÇiÀàºÍjÀàÖ®¼äÓĞÃ»ÓĞÁ¬±ß
-  # ÓÃ¾ùÔÈ·Ö²¼ÉÔÏÔ¸´ÔÓ£¬Ê¹ÓÃ²®Å¬Àû·Ö²¼Éú³É¸ü·½±ã¡£
+  # è¿™é‡ŒPijæ˜¯iç±»å’Œjç±»ä¹‹é—´æœ‰æ²¡æœ‰è¿è¾¹
+  # ç”¨å‡åŒ€åˆ†å¸ƒç¨æ˜¾å¤æ‚ï¼Œä½¿ç”¨ä¼¯åŠªåˆ©åˆ†å¸ƒç”Ÿæˆæ›´æ–¹ä¾¿ã€‚
   # P11 = matrix(rbinom(N^2,1,a1),N,N)
   # table(runif(N^2,0,1)<a1)
-  Paa=matrix(as.numeric(runif(N^2,0,1)<a1),N,N)#ÕâÀï¾ÍÊÇ¼ÙÉèÁ½¸öµãÍ¬ÊôÓÚµÚÒ»Àà£¬ÄÇÃ´Á½¸öµãÖ®¼äÊÇ·ñÓĞ±ß£¬ÆäÊµÊÇP11
-  Pbb=matrix(as.numeric(runif(N^2,0,1)<a2),N,N)#Í¬ÊôÓÚµÚ¶şÀà£¬ÆäÊµÎªP22
-  Pab=matrix(as.numeric(runif(N^2,0,1)<b),N,N)#ÊôÓÚ1¡¢2Àà£¬ÆäÊµÎªP12=P21
+  Paa=matrix(as.numeric(runif(N^2,0,1)<a1),N,N)#è¿™é‡Œå°±æ˜¯å‡è®¾ä¸¤ä¸ªç‚¹åŒå±äºç¬¬ä¸€ç±»ï¼Œé‚£ä¹ˆä¸¤ä¸ªç‚¹ä¹‹é—´æ˜¯å¦æœ‰è¾¹ï¼Œå…¶å®æ˜¯P11
+  Pbb=matrix(as.numeric(runif(N^2,0,1)<a2),N,N)#åŒå±äºç¬¬äºŒç±»ï¼Œå…¶å®ä¸ºP22
+  Pab=matrix(as.numeric(runif(N^2,0,1)<b),N,N)#å±äº1ã€2ç±»ï¼Œå…¶å®ä¸ºP12=P21
   
   PAA=matrix(as.numeric(runif((2*N)^2,0,1)<a1),2*N,2*N)
   PBB=matrix(as.numeric(runif((2*N)^2,0,1)<a2),2*N,2*N)
   PAB=matrix(as.numeric(runif((2*N)^2,0,1)<b),2*N,2*N)
   ###################################################################
-  # ÕâÊÇÔõÃ´¹¹ÔìµÄ£¬ÎªÉ¶ÕâÃ´¹¹Ôì£¿
+  # åœ¨(2.3èŠ‚ï¼‰ä¸­ä½¿ç”¨çš„åº”è¯¥æ˜¯structure2
   if(struc==1)
   {
     W=rbind(cbind(Paa,Pab,c*Paa,c*Pab),cbind(Pab,Pbb,c*Pab,c*Pbb),cbind(c*Paa,c*Pab,Paa,Pab),cbind(c*Pab,c*Pbb,Pab,Pbb))
   }
-  if (struc==2)# ×îÖÕÊ¹ÓÃÕâ¸ö£¬½á¹¹ºÜ¼òµ¥£¬Ã¿Àà100¸ö¡£
+  if (struc==2)# 2.3èŠ‚ä½¿ç”¨è¿™ä¸ªï¼Œç»“æ„å¾ˆç®€å•ï¼Œæ¯ç±»100ä¸ªèŠ‚ç‚¹ï¼Œå…±ä¸¤ç±»ã€‚
   {
     W=rbind(cbind(PAA,PAB),cbind(PAB,PBB))
     
@@ -64,53 +64,53 @@ library(MASS)
 library(igraph)
 library(e1071)
 
-# Ñù±¾Á¿100£¬ÏòÁ¿Î¬¶È5
+# æ ·æœ¬é‡100ï¼Œå‘é‡ç»´åº¦5
 N=100; p=5; 
-# Éú³ÉÁÚ½Ó¾ØÕóµÄ´ÎÊı£¿
+# è¿›è¡Œsimulationçš„æ¬¡æ•°ï¼Œä¹Ÿæ˜¯ç”Ÿæˆé‚»æ¥çŸ©é˜µçš„æ¬¡æ•°
 num_sim=100 # given an adjcent matrix repeat X for num_sim times. 
-# Àà±ğÊıÁ¿£¿
+# ç±»åˆ«æ•°é‡ï¼ˆéšæœºå—æ¨¡å‹çš„å—æ•°ï¼‰ï¼Œé»˜è®¤æ˜¯ä¸¤ç±»ã€‚
 num_block=2
-# strucÊÇÁÙ½ç¾ØÕóµÄ½á¹¹£¬¿ÉÄÜ¶ÔÓ¦2.3µÄÈı·ùÍ¼
+# strucæ˜¯ä¸´ç•ŒçŸ©é˜µçš„ç»“æ„ï¼Œé»˜è®¤æ˜¯100ä¸ª1ç±»ï¼Œ100ä¸ª2ç±»èŠ‚ç‚¹ã€‚
 struc=2 #1:(2c); 2:(2a); 3:(2b)
 
-# ÕâÀïmean_shiftÍÆ²âÊÇÎÄÖĞu£¬´ú±ímu_1ÏòÁ¿µÄµÚÒ»¸öÔªËØµÄ´óĞ¡
+# è¿™é‡Œmean_shiftæ¨æµ‹æ˜¯æ–‡ä¸­uï¼Œä»£è¡¨mu_1å‘é‡çš„ç¬¬ä¸€ä¸ªå…ƒç´ çš„å¤§å°
 mean_shift=1.6
-# ÕâÀïrhoÍÆ²âÊÇÎÄÖĞdelta_0={0.05£¬0.1£¬0.3£¬0.5£¬0.7£¬1}
+# è¿™é‡Œrhoæ¨æµ‹æ˜¯æ–‡ä¸­delta_0={0.05ï¼Œ0.1ï¼Œ0.3ï¼Œ0.5ï¼Œ0.7ï¼Œ1}
 rho=0.1 #rho=1,0.05
-# ÕâÀïa1¾ÍÊÇÎÄÖĞa1
+# è¿™é‡Œa1å°±æ˜¯æ–‡ä¸­a1
 a1=0.5 
-# ÕâÀïa2Ó¦¸ÃÊÇÎÄÖĞa2
+# è¿™é‡Œa2åº”è¯¥æ˜¯æ–‡ä¸­a2
 a2=0.1
-# ÕâÀïcÊÇÎÄÖĞµÄb
+# è¿™é‡Œcåº”è¯¥æ˜¯åœ¨ç¬¬å››èŠ‚ã€ç¬¬äº”èŠ‚ç”¨å¾—åˆ°
 c=0.1 ## 0.2,0.05 
-# ÕâÀïb¾ÍÊÇb
+# è¿™é‡Œbå°±æ˜¯b
 b=seq(0,0.7,0.1)
 
-# Ëæ»úÊıÖÖ×ÓµÄĞòÁĞ
+# éšæœºæ•°ç§å­çš„åºåˆ—
 SEED=seq(from=100,to=30000,by=33)  # random seed 
-# Ö´ĞĞËã·¨µÄ´ÎÊı
+# æ‰§è¡Œç®—æ³•çš„æ¬¡æ•°
 N_simu=10   # generate random adjcent matrix for N_simu times. 
 
-# ¼ÆËãÓÃÊ±
+# è®¡ç®—ç”¨æ—¶
 timeused=matrix(nrow=N_simu,ncol=length(b))
-# ¾ÛÀà/·ÖÀàÎó²î
+# èšç±»/åˆ†ç±»è¯¯å·®
 Error<-matrix(nrow=N_simu,ncol=length(b))
 ################# 
-# Ê©ĞĞ¶à´ÎËã·¨
+# æ–½è¡Œå¤šæ¬¡ç®—æ³•
 for (xi in c(1:N_simu))
 {
-  # Ã¿´ÎÑ¡È¡Ò»¸öÖÖ×Ó
+  # æ¯æ¬¡é€‰å–ä¸€ä¸ªç§å­
   Seed=SEED[xi]
-  # ÕâÀïÓ¦¸ÃÊÇÕë¶Ô£¨b£©²ÎÊıÉè¶¨£¬¶ÔtauµÄ²»Í¬È¡ÖµÊ©ĞĞËã·¨¡£
+  # è¿™é‡Œåº”è¯¥æ˜¯é’ˆå¯¹ï¼ˆbï¼‰å‚æ•°è®¾å®šï¼Œå¯¹tauçš„ä¸åŒå–å€¼æ–½è¡Œç®—æ³•ã€‚
   for(r in 1:length(b)){
-    # ÕâÀïN/2£¬ºóÃæ2*N£¬»¹ÊÇÃ¿Àà100¸ö¡£
+    # è¿™é‡ŒN/2ï¼Œåé¢2*Nï¼Œè¿˜æ˜¯æ¯ç±»100ä¸ªã€‚
     S_A=Sigma_Adj(p,N/2,struc,rho*a1,rho*a2,rho*b[r],c,Seed)
-    # BÊÇÎó²îµÄĞ­·½²îÕó£¬WÊÇÁÚ½Ó¾ØÕó£¬¹²200¸öµã£¬40000¸ö±ß£¨2.3ÖĞ£©
+    # Bæ˜¯è¯¯å·®çš„åæ–¹å·®é˜µï¼ŒWæ˜¯é‚»æ¥çŸ©é˜µï¼Œå…±200ä¸ªç‚¹ï¼Œ40000ä¸ªè¾¹ï¼ˆ2.3ä¸­ï¼‰
     B=S_A$Sigma
     W=S_A$Adj_mat
     
     #true label
-    # ÕæÊµµÄÀà±êÊÇ100¸ö1£¬100¸ö2£¨2.3ÖĞ£©
+    # çœŸå®çš„ç±»æ ‡æ˜¯100ä¸ª1ï¼Œ100ä¸ª2ï¼ˆ2.3ä¸­ï¼‰
     if(num_block==2){
       True_label=c(rep(1,N),rep(2,N));
     }else{
@@ -118,13 +118,13 @@ for (xi in c(1:N_simu))
     }
     
     ############### covariates
-    mu1=c(mean_shift,rep(0,p-1)); mu2=-mu1;#ÉèÖÃ¦Ì
+    mu1=c(mean_shift,rep(0,p-1)); mu2=-mu1;#è®¾ç½®Î¼
     mu3=c(0,mean_shift,rep(0,p-2))
     mu4=-mu3
     
     if(num_block==2){
-      X1 <- mvrnorm(n=N, mu=mu1, Sigma=B)#Éú³ÉN=100¸öÏòÁ¿node
-      X2 <- mvrnorm(n=N, mu=mu2, Sigma=B)#mvnorm°üÄ£Äâ¶àÔªÕıÌ¬
+      X1 <- mvrnorm(n=N, mu=mu1, Sigma=B)#ç”ŸæˆN=100ä¸ªå‘é‡node
+      X2 <- mvrnorm(n=N, mu=mu2, Sigma=B)#mvnormåŒ…æ¨¡æ‹Ÿå¤šå…ƒæ­£æ€
       X=rbind(X1,X2)
     }else{
       X1 <- mvrnorm(n=N/2, mu=mu1, Sigma=B)
@@ -134,7 +134,7 @@ for (xi in c(1:N_simu))
       X=rbind(X1,X2,X3,X4)
     }
     
-    result=main(X,W,p,N,True_label,num_block,Iteration=FALSE)#main¼ûÁíÒ»¸öR´úÂë
+    result=main(X,W,p,N,True_label,num_block,Iteration=FALSE)#mainè§å¦ä¸€ä¸ªRä»£ç 
     Error[xi,r]=result[[1]]
     timeused[xi,r]=result[[2]]
   }
